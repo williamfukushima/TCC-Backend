@@ -8,13 +8,17 @@ export class Controller {
     constructor(model: Model, view: View) {
         this.model = model;
         this.view = view;
-    }
 
-    setData(data: string): void {
-        this.model.setData(data);
-    }
+        //#region Updating Model on View input events
+        
+        //#endregion
 
-    updateView(): void {
-        this.view.render([this.model.getData()]);
+        //#region Updating View on Model raising events
+        
+        //#endregion
+    }
+    
+    run(){
+        this.view.render();
     }
 }

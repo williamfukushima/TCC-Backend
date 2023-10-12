@@ -8,14 +8,12 @@ export class MVC{
     private controller: Controller;
     
     constructor(){
-        this.model =  new Model('Dados iniciais');
+        this.model =  new Model();
         this.view = new View();
         this.controller = new Controller(this.model, this.view);
     }
    
     public Start(){
-        this.controller.updateView();
-        this.controller.setData('Novos dados');
-        this.controller.updateView();
+        this.controller.run();
     }
 }

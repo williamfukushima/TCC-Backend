@@ -1,17 +1,26 @@
-import { Controller } from "./Controller";
+import { Observable } from "../Observable/Observable";
 
 export class View {
-    controller: Controller | null;
+
+    //#region Update Model Events
+    updateDataEvent: Observable;
+    //#endregion
 
     constructor() {
-        this.controller = null;
+        this.updateDataEvent = new Observable();
     }
 
-    setController(controller: Controller) {
-        this.controller = controller;
-    }
+    render() {
+        console.log("Primeira renderização");
+        document.addEventListener('DOMContentLoaded', () => {        
+            document.addEventListener('keydown', (event: KeyboardEvent) => {
+                // Display the key code in the HTML element
+                this.updateData(event);
+            });
+        });    }
 
-    render(data: string[]) {
-        console.log("Renderizando dados: ", data);
+
+    updateData(data: KeyboardEvent){
+        console.log("Dados atualizados: ", data.key);
     }
 }

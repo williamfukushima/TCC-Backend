@@ -5,15 +5,15 @@ export class Observable {
       this.observers = [];
     }
    
-    subscribe(func) {
+    subscribe(func: Function) {
       this.observers.push(func);
     }
    
-    unsubscribe(func) {
+    unsubscribe(func: Function) {
       this.observers = this.observers.filter((observer) => observer !== func);
     }
    
-    notify(data) {
+    notify(data: any) {
       this.observers.forEach((observer) => observer(data));
     }
   }
