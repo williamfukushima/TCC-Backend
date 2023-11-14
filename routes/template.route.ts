@@ -1,23 +1,27 @@
 import TemplateGenerator from "../PatternTemplates/CodeGenerator";
 import { Request, Response } from "express";
-import fs from "fs";
-
-import archiver from 'archiver';
+import generateUniqueId from 'generate-unique-id';
 
 const createTemplateRoute = async (req: Request, res: Response) => {
   const classname = req.query.classname;
   const template = req.query.template;
-  const filePath = `public/${classname}.ts`;
+  const folderID = generateUniqueId();
 
+  const projectFolder = `public/${folderID}`;
   const app = new TemplateGenerator();
-  await app.createFile(`PatternTemplates/${template}/${template}.ts`, filePath,`${classname}`);
+  await app.makeDirectory(projectFolder);
+  await app.createFile(`PatternTemplates/${template}/${template}.ts`, projectFolder + `/${classname}.ts`,`${classname}`);
+  await app.zipFolder(`public/${folderID}`,`public/GeneratedProject.zip`, () => 
+  res.download(`public/GeneratedProject.zip`, "GeneratedProject.zip", (err: Error) => {
+    res.status(200);
+    if (err) {
+      console.log(err)
+      res.status(500).send("Internal Server Error");
+    }
+    app.deleteFile(projectFolder);
+  }))
+// app.deleteFile(projectFolder););
 
-  res.download(filePath, classname + ".ts", (err: Error) => {
-      res.status(200);
-      if (err) {
-        res.status(500).send("Internal Server Error");
-      }
-    });
-  app.deleteFile(filePath);
+  
 }
 export default createTemplateRoute;

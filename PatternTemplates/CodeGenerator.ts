@@ -1,12 +1,17 @@
 import fs from "fs";
 import path from "path";
-
+import archiver from 'archiver';
 class TemplateGenerator {
   pascalCaseRegex = /^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/;
   validFileRegex = /[a-zA-Z0-9_]/;
   classRegex = /(class)/;
-
+  
   constructor() { }
+
+  async makeDirectory(projectFolder:string){
+    await fs.mkdir(projectFolder,(err) => null);
+  }
+
   async createFile(templatePath: string, destinationPath: string, className: string): Promise<void> {
     const fileContent = this.readTemplate(templatePath, className);
 
@@ -19,6 +24,28 @@ class TemplateGenerator {
     });
   }
 
+  async zipFolder(folderPath: string, destinationFile: string, OnClose: Function)
+  {
+    const sourceFolder = folderPath;
+    const zipFilePath = destinationFile;
+    
+    const output = fs.createWriteStream(zipFilePath);
+    const archive = archiver('zip');
+    
+    output.on('close', () => {
+      console.log(`Successfully created ${zipFilePath}`);
+      OnClose();
+    });
+    
+    archive.on('error', (err) => {
+      throw err;
+    });
+    
+    archive.pipe(output);    
+    archive.directory(sourceFolder, false);
+    await archive.finalize();
+  }
+  
   readTemplate(path: string, className: string): string {
     const fileContent = fs.readFileSync(path, "utf-8");
     const lines = fileContent.split("\n");
@@ -42,6 +69,8 @@ class TemplateGenerator {
     }
     return modifiedFileContent;
   }
+
+  
 
   deleteFile(filepath: string) {
     if (this.validFileRegex.test(filepath)) {
