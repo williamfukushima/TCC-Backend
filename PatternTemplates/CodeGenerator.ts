@@ -1,5 +1,4 @@
 import fs from "fs";
-import path from "path";
 import archiver from 'archiver';
 class TemplateGenerator {
   pascalCaseRegex = /^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/;
@@ -74,7 +73,7 @@ class TemplateGenerator {
 
   deleteFile(filepath: string) {
     if (this.validFileRegex.test(filepath)) {
-      fs.rm(filepath, (err: any) => {
+      fs.rmdir(filepath, { recursive: true }, (err: any) => {
         if (err) {
           console.error(`Error deleting from ${filepath}: ${err}`);
         } else {
