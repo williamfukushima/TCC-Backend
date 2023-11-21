@@ -1,6 +1,9 @@
 export class Observable {
     observers: Function[];
     
+    //#region Attributes
+    //#endregion
+
     constructor() {
       this.observers = [];
     }
@@ -16,4 +19,7 @@ export class Observable {
     notify(data: any) {
       this.observers.forEach((observer) => observer(data));
     }
+
+  //#region Methods
+  //#endregion
   }

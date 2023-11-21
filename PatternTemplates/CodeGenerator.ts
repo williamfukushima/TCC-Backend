@@ -1,26 +1,39 @@
 import fs from "fs";
 import archiver from 'archiver';
+
 class TemplateGenerator {
   pascalCaseRegex = /^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/;
   validFileRegex = /[a-zA-Z0-9_]/;
-  classRegex = /(class)/;
-  
+  classRegex = /class (.*?) /g;
+  attributesRegionRegex = /(\/\/#region Attributes)/g;
+  methodsRegionRegex = /(\/\/#region Methods)/;
+
   constructor() { }
 
-  async makeDirectory(projectFolder:string){
-    await fs.mkdir(projectFolder,(err) => null);
+  makeDirectory(directory:string){
+        
+    try
+    {
+      fs.mkdirSync(directory);
+    }
+    catch(err)
+    {
+      console.error(`Error creating directory ${directory}: ${err}`);
+    }
   }
 
-  async createFile(templatePath: string, destinationPath: string, className: string): Promise<void> {
-    const fileContent = this.readTemplate(templatePath, className);
+  createFile(templatePath: string, destinationPath: string, diagramElement:any, diagramElements: any) {
+    const fileContent = this.readTemplate(templatePath, diagramElement, diagramElements);
 
-    fs.writeFile(destinationPath, fileContent, (err: any) => {
-      if (err) {
-        console.error(`Error writing to ${destinationPath}: ${err}`);
-      } else {
-        console.log(`Successfully created and wrote to ${destinationPath}`);
-      }
-    });
+    try
+    {
+      fs.writeFileSync(destinationPath, fileContent);
+      console.log(`Successfully created and wrote to ${destinationPath}`);
+    }
+    catch(err)
+    {
+      console.error(`Error writing to ${destinationPath}: ${err}`);
+    }
   }
 
   async zipFolder(folderPath: string, destinationFile: string, OnClose: Function)
@@ -44,8 +57,8 @@ class TemplateGenerator {
     archive.directory(sourceFolder, false);
     await archive.finalize();
   }
-  
-  readTemplate(path: string, className: string): string {
+
+  readTemplate(path: string, diagramElement: any, diagramElements: any): string {
     const fileContent = fs.readFileSync(path, "utf-8");
     const lines = fileContent.split("\n");
     var modifiedFileContent = "";
@@ -56,30 +69,58 @@ class TemplateGenerator {
       var newLine = line;
       {
         // Change class name
-
-        var matches = /class (.*?) /g.exec(line);
+        var matches = this.classRegex.exec(line);
         if (matches != null && matches.length > 1) {
           if (matches[1]) {
-            newLine = line.replace(matches[1], className);
+            newLine = line.replace(matches[1], diagramElement.name);
           }
         }
+
+        // Add attributes
+        var matches = this.attributesRegionRegex.exec(line);
+        if (matches != null && diagramElement.attributes.length > 0) {
+          diagramElement.attributes.forEach((attribute: string) => {
+            newLine += "\n" + "    " + this.replaceEncapsulationString(diagramElements[attribute].name);
+          })
+        }
+
+        // Add methods
+        var matches = this.methodsRegionRegex.exec(line);
+        if (matches != null && diagramElement.methods.length > 0) {
+          diagramElement.methods.forEach((method: string) => {
+            newLine += "\n" + "    " + this.replaceEncapsulationString(diagramElements[method].name);
+          })
+        }
+
         modifiedFileContent += newLine + "\n";
+
       }
     }
     return modifiedFileContent;
   }
 
-  
+  replaceEncapsulationString(encapsulationString: string)
+  {
+    return encapsulationString.replace('+', "public").replace('#', "protected").replace('-', "private");
+  }
+
+  deleteDir(filepath: string) {
+    if (this.validFileRegex.test(filepath)) {
+      fs.rm(filepath, {recursive: true}, (err) => {
+        console.error(`Error deleting from ${filepath}: ${err}`);
+      })
+    }
+    console.log(`Successfully deleted file ${filepath}`);
+
+    }
 
   deleteFile(filepath: string) {
     if (this.validFileRegex.test(filepath)) {
-      fs.rmdir(filepath, { recursive: true }, (err: any) => {
-        if (err) {
-          console.error(`Error deleting from ${filepath}: ${err}`);
-        } else {
-          console.log(`Successfully deleted file ${filepath}`);
-        }
-      })
+      fs.rm(filepath, (err) =>
+      {
+        console.error(`Error deleting from ${filepath}: ${err}`);
+      });
+      console.log(`Successfully deleted file ${filepath}`);
     }
   }
 }
