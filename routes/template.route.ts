@@ -1,4 +1,4 @@
-import TemplateGenerator from "../PatternTemplates/CodeGenerator";
+import CodeGenerator from "../PatternTemplates/CodeGenerator";
 import { Request, Response } from "express";
 import generateUniqueId from 'generate-unique-id';
 
@@ -8,7 +8,7 @@ const createTemplateRoute = async (req: Request, res: Response) => {
   const folderID = generateUniqueId();
 
   const projectFolder = `public/${folderID}/project`;
-  const app = new TemplateGenerator();
+  const app = new CodeGenerator();
   await app.makeDirectory(`public/${folderID}`);
   await app.makeDirectory(`public/${folderID}/project`);
   // await app.createFile(`PatternTemplates/${template}/${template}.ts`, projectFolder + `/${classname}.ts`,`${classname}`);

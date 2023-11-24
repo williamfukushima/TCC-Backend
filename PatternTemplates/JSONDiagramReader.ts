@@ -1,6 +1,6 @@
 import fs from "fs";
 import archiver from 'archiver';
-import TemplateGenerator from "./CodeGenerator";
+import CodeGenerator from "./CodeGenerator";
 import generateUniqueId from "generate-unique-id";
 
 class JSONDiagramReader {
@@ -11,7 +11,7 @@ class JSONDiagramReader {
 
   async generateProjectFiles(jsonFile: any, folderID: string){
 
-    const templateGenerator = new TemplateGenerator();
+    const templateGenerator = new CodeGenerator();
     const projectFolder = `public/${folderID}/project`;
 
     // Prepare directory for project download
@@ -46,7 +46,7 @@ class JSONDiagramReader {
           await templateGenerator.createFile("PatternTemplates/Interface/Interface.ts", `${projectFolder}/Interfaces/${diagramElements[key].name}.ts`, diagramElements[key], diagramElements);
           break;
         case "Enumeration":
-          await templateGenerator.createFile("PatternTemplates/Enumerations/Enumeration.ts", `${projectFolder}/Enumerations/${diagramElements[key].name}.ts`, diagramElements[key], diagramElements);
+          await templateGenerator.createFile("PatternTemplates/Enumeration/Enumeration.ts", `${projectFolder}/Enumerations/${diagramElements[key].name}.ts`, diagramElements[key], diagramElements);
           break;
         case "ClassMethod":
           break;

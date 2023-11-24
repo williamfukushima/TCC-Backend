@@ -1,7 +1,7 @@
 import fs from "fs";
 import archiver from 'archiver';
 
-class TemplateGenerator {
+class CodeGenerator {
   pascalCaseRegex = /^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/;
   validFileRegex = /[a-zA-Z0-9_]/;
   classRegex = /class (.*?) /g;
@@ -80,7 +80,7 @@ class TemplateGenerator {
         var matches = this.attributesRegionRegex.exec(line);
         if (matches != null && diagramElement.attributes.length > 0) {
           diagramElement.attributes.forEach((attribute: string) => {
-            newLine += "\n" + "    " + this.replaceEncapsulationString(diagramElements[attribute].name);
+            newLine += "\n" + "    " + this.replaceEncapsulationString(diagramElements[attribute].name) + ";";
           })
         }
 
@@ -88,7 +88,7 @@ class TemplateGenerator {
         var matches = this.methodsRegionRegex.exec(line);
         if (matches != null && diagramElement.methods.length > 0) {
           diagramElement.methods.forEach((method: string) => {
-            newLine += "\n" + "    " + this.replaceEncapsulationString(diagramElements[method].name);
+            newLine += "\n" + "    " + this.replaceEncapsulationString(diagramElements[method].name) + "(){\n      # Implement This Method\n    };";
           })
         }
 
@@ -125,4 +125,4 @@ class TemplateGenerator {
   }
 }
 
-export default TemplateGenerator;
+export default CodeGenerator;
