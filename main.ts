@@ -3,10 +3,12 @@ import createTemplateRoute from "./routes/template.route";
 import uploadTestRoute from "./routes/upload_test.route";
 import diagramUploadRoute from "./routes/diagram_upload.route";
 import bodyParser from 'body-parser';
+import cors from 'cors';
 
 const runServer = () => {
   const app = express();
   app.use(bodyParser.json());
+  app.use(cors());
 
   const port = process.env.PORT || 3000;
 
