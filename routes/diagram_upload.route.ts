@@ -1,4 +1,4 @@
-import CodeGenerator from "../PatternTemplates/CodeGenerator";
+import FilesystemOperations from "../PatternTemplates/FilesystemOperations";
 import { Request, Response } from "express";
 import generateUniqueId from 'generate-unique-id';
 import JSONDiagramReader from "../PatternTemplates/JSONDiagramReader";
@@ -9,7 +9,7 @@ const createTemplateRoute = async (req: Request, res: Response) => {
   const folderID = generateUniqueId();
   const projectFolder = `public/${folderID}/project`;
 
-  const app = new CodeGenerator();
+  const app = new FilesystemOperations();
 
   const jsonReader = new JSONDiagramReader();
   await jsonReader.generateProjectFiles(jsonData, folderID);
