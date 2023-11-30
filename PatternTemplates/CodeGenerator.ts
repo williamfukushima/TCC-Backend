@@ -88,7 +88,7 @@ class CodeGenerator {
         var matches = this.methodsRegionRegex.exec(line);
         if (matches != null && diagramElement.methods.length > 0) {
           diagramElement.methods.forEach((method: string) => {
-            newLine += "\n" + "    " + this.replaceEncapsulationString(diagramElements[method].name) + "{\n      # Implement This Method\n    };";
+            newLine += "\n" + "    " + this.replaceEncapsulationString(diagramElements[method].name) + "{\n      //# Implement This Method\n    };";
           })
         }
 
@@ -113,7 +113,7 @@ class CodeGenerator {
     console.log(`Successfully deleted file ${filepath}`);
 
     }
-
+  
   deleteFile(filepath: string) {
     if (this.validFileRegex.test(filepath)) {
       fs.rm(filepath, (err) =>

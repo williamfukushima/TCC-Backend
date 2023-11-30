@@ -1,7 +1,4 @@
-import fs from "fs";
-import archiver from 'archiver';
 import CodeGenerator from "./CodeGenerator";
-import generateUniqueId from "generate-unique-id";
 
 class JSONDiagramReader {
   pascalCaseRegex = /^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/;
