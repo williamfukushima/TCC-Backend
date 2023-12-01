@@ -1,17 +1,17 @@
-import fs from "fs";
-import archiver from 'archiver';
-import CodeGenerator from "./CodeGenerator";
-import generateUniqueId from "generate-unique-id";
+import ClassGenerator from "./GenericClass/ClassGenerator";
+import FilesystemOperations from "./FilesystemOperations";
+import EnumerationGenerator from "./Enumeration/EnumerationGenerator";
+import InterfaceGenerator from "./Interface/InterfaceGenerator";
 
 class JSONDiagramReader {
   pascalCaseRegex = /^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/;
   validFileRegex = /[a-zA-Z0-9_]/;
-
+  
   constructor() { }
 
   async generateProjectFiles(jsonFile: any, folderID: string){
 
-    const templateGenerator = new CodeGenerator();
+    const templateGenerator = new FilesystemOperations();
     const projectFolder = `public/${folderID}/project`;
 
     // Prepare directory for project download
@@ -28,11 +28,10 @@ class JSONDiagramReader {
     
     // list of classes
     var classesList: any[] = [];
-
+    var content: string
 
     Object.keys(diagramElements).forEach(async (key: any) => {
       // Search element Relationships
-
       // Check if is a class
       switch(diagramElements[key].type)
       {
@@ -43,10 +42,12 @@ class JSONDiagramReader {
           await templateGenerator.makeDirectory(diagramElements[key].name);
           break;
         case "ClassInterface":
-          await templateGenerator.createFile("PatternTemplates/Interface/Interface.ts", `${projectFolder}/Interfaces/${diagramElements[key].name}.ts`, diagramElements[key], diagramElements);
+          content = await InterfaceGenerator.instance.createFileFromTemplate(diagramElements[key], diagramElements);
+          await templateGenerator.createFile(`${projectFolder}/Interfaces/${diagramElements[key].name}.ts`, content);
           break;
         case "Enumeration":
-          await templateGenerator.createFile("PatternTemplates/Enumeration/Enumeration.ts", `${projectFolder}/Enumerations/${diagramElements[key].name}.ts`, diagramElements[key], diagramElements);
+          content = await EnumerationGenerator.instance.createFileFromTemplate( diagramElements[key], diagramElements);
+          await templateGenerator.createFile(`${projectFolder}/Classes/${diagramElements[key].name}.ts`, content);
           break;
         case "ClassMethod":
           break;
@@ -55,12 +56,12 @@ class JSONDiagramReader {
         default:
           break;
       }
-
-      classesList.forEach(async element => {
-          await templateGenerator.createFile("PatternTemplates/GenericClass/GenericClass.ts", `${projectFolder}/Classes/${element.name}.ts`, element, diagramElements);
-      });
-
     });
+
+    classesList.forEach(async element => {
+      content = await ClassGenerator.instance.createFileFromTemplate(element, diagramElements);
+      await templateGenerator.createFile(`${projectFolder}/Classes/${element.name}.ts`, content);
+  });
   }
 }
 

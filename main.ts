@@ -4,6 +4,15 @@ import uploadTestRoute from "./routes/upload_test.route";
 import diagramUploadRoute from "./routes/diagram_upload.route";
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import FilesystemOperations from "./PatternTemplates/FilesystemOperations";
+import ClassGenerator from "./PatternTemplates/GenericClass/ClassGenerator";
+import EnumerationGenerator from "./PatternTemplates/Enumeration/EnumerationGenerator";
+import InterfaceGenerator from "./PatternTemplates/Interface/InterfaceGenerator";
+
+new FilesystemOperations();
+new ClassGenerator();
+new EnumerationGenerator();
+new InterfaceGenerator();
 
 const runServer = () => {
   const app = express();
