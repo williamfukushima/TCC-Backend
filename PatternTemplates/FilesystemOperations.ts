@@ -76,8 +76,10 @@ class FilesystemOperations {
       console.log(`Successfully deleted file ${filepath}`);
     }
   }
-
   
+  checkIfExists(filepath: string) {
+    return fs.existsSync(filepath);
+    }
   //#endregion
 }
 

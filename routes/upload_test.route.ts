@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 
 const uploadTestRoute = async (req: Request, res: Response) => {
     try {
