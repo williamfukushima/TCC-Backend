@@ -1,11 +1,10 @@
 import fs from "fs";
-import archiver from 'archiver';
-import FilesystemOperations from "../FilesystemOperations";
+
 
 class InterfaceGenerator {
   pascalCaseRegex = /^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/;
   validFileRegex = /[a-zA-Z0-9_]/;
-  classRegex = /class (.*?) /g;
+  interfaceRegex = /interface (.*?) /g;
   attributesRegionRegex = /(\/\/#region Attributes)/g;
   methodsRegionRegex = /(\/\/#region Methods)/;
   public static instance: InterfaceGenerator;
@@ -28,7 +27,7 @@ class InterfaceGenerator {
       var newLine = line;
       {
         // Change class name
-        var matches = this.classRegex.exec(line);
+        var matches = this.interfaceRegex.exec(line);
         if (matches != null && matches.length > 1) {
           if (matches[1]) {
             newLine = line.replace(matches[1], diagramElement.name);
@@ -47,12 +46,10 @@ class InterfaceGenerator {
         var matches = this.methodsRegionRegex.exec(line);
         if (matches != null && diagramElement.methods.length > 0) {
           diagramElement.methods.forEach((method: string) => {
-            newLine += "\n" + "    " + this.replaceEncapsulationString(diagramElements[method].name) + "{\n      //# Implement This Method\n    };";
+            newLine += "\n" + "    " + this.replaceEncapsulationString(diagramElements[method].name) + ";";
           })
         }
-
         modifiedFileContent += newLine + "\n";
-
       }
     }
     return modifiedFileContent;
@@ -61,7 +58,7 @@ class InterfaceGenerator {
 //#region Utils
   replaceEncapsulationString(encapsulationString: string)
   {
-    return encapsulationString.replace('+', "public").replace('#', "protected").replace('-', "private");
+    return encapsulationString.replace('+ ', "").replace('# ', "").replace('- ', "");
   }
 //#endregion
 }

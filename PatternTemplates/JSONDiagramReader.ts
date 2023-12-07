@@ -28,7 +28,7 @@ class JSONDiagramReader {
     
     // list of classes
     var classesList: any[] = [];
-    var content: string
+    var content: string;
 
     Object.keys(diagramElements).forEach(async (key: any) => {
       // Search element Relationships
@@ -41,13 +41,13 @@ class JSONDiagramReader {
         case "AbstractClass":
           await templateGenerator.makeDirectory(diagramElements[key].name);
           break;
-        case "ClassInterface":
+        case "Interface":
           content = await InterfaceGenerator.instance.createFileFromTemplate(diagramElements[key], diagramElements);
           await templateGenerator.createFile(`${projectFolder}/Interfaces/${diagramElements[key].name}.ts`, content);
           break;
         case "Enumeration":
           content = await EnumerationGenerator.instance.createFileFromTemplate( diagramElements[key], diagramElements);
-          await templateGenerator.createFile(`${projectFolder}/Classes/${diagramElements[key].name}.ts`, content);
+          await templateGenerator.createFile(`${projectFolder}/Enumerations/${diagramElements[key].name}.ts`, content);
           break;
         case "ClassMethod":
           break;
