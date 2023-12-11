@@ -47,7 +47,7 @@ class ClassGenerator {
         var matches = this.methodsRegionRegex.exec(line);
         if (matches != null && diagramElement.methods.length > 0) {
           diagramElement.methods.forEach((method: string) => {
-            newLine += "\n" + "    " + this.replaceEncapsulationString(diagramElements[method].name) + "\n{\n      //# Implement This Method\n    };";
+            newLine += "\n" + "    " + this.replaceEncapsulationString(diagramElements[method].name) + "\n    {\n      //# Implement This Method\n    };";
           })
         }
 

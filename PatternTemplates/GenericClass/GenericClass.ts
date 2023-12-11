@@ -1,11 +1,10 @@
-export class Controller {
-    //#region Attributes
-    //#endregion
+export class GenericClass {
+  //#region Attributes
+  //#endregion
 
-    constructor() {
-    }
-    
-    //#region Methods
-    //#endregion
+  constructor() {
   }
   
+  //#region Methods
+  //#endregion
+}

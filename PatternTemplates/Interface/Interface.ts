@@ -1,5 +1,4 @@
-interface Interface
-{
+export interface Interface {
     //#region Attributes
     //#endregion
 
