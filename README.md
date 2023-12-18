@@ -11,7 +11,7 @@ This project uses the following environment variables:
 
 
 # Pre-requisites
-- Install [Node.js](https://nodejs.org/en/) version 8.0.0
+- Install [Node.js](https://nodejs.org/en/) version 18.16.1
 
 
 # Getting started
@@ -37,14 +37,13 @@ The folder structure of this app is explained below:
 | Name | Description |
 | ------------------------ | --------------------------------------------------------------------------------------------- |
 | **node_modules**         | Contains all  npm dependencies                                                            |
-| **src**                  | Contains  source code that will be compiled to the dist dir                               |
-| **configuration**        | Application configuration including environment-specific configs 
-| **src/controllers**      | Controllers define functions to serve various express routes. 
-| **src/lib**              | Common libraries to be used across your app.  
-| **src/middlewares**      | Express middlewares which process the incoming requests before handling them down to the routes
-| **src/routes**           | Contain all express routes, separated by module/area of application                       
-| **src/models**           | Models define schemas that will be used in storing and retrieving data from Application database  |
-| **src/monitoring**      | Prometheus metrics |
-| **src**/index.ts         | Entry point to express app                                                               |
+| **PatternTemplates**           | Contains scaffolding packages with templates for classes and customization scripts. |                       
+| **PatternTemplates**/FilesystemOperations.ts  | Class for filesystem operations |
+| **PatternTemplates**/JSONDiagramReader.ts  | JSON diagram decoder for project generation |
+| **routes**           | Contain all express routes. |                       
+| **public**      | Folder used to store temporary files |
+| main.ts         | Entry point to express app                                                               |
 | package.json             | Contains npm dependencies as well as [build scripts](#what-if-a-library-isnt-on-definitelytyped)   |
+| package-lock.json             | Contains locked versions of the packages |
 | tsconfig.json            | Config settings for compiling source code only written in TypeScript    |
+| webpack.config.js            | Webpack config for compiling code into bundle |
